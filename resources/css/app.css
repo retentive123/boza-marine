@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Brand CSS variables (--color-primary, --color-secondary, --color-accent,
+ * --font-heading, --font-body) are NOT defined here. They are injected
+ * per-request as an inline <style> block by resources/views/partials/brand-styles.blade.php,
+ * which reads live values from the SiteSetting model (with its own PHP-level
+ * fallback defaults). Defining a second :root rule in this compiled stylesheet
+ * would load after that inline block in every layout and silently win the
+ * cascade (equal specificity, later source order), permanently overriding
+ * whatever the admin configures. Do not reintroduce a :root block here.
+ */
+
+@layer base {
+    body {
+        @apply antialiased text-navy-900;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .font-display {
+        font-family: var(--font-heading);
+    }
+
+    .container-boza {
+        @apply mx-auto max-w-7xl px-6 lg:px-8;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95;
+        background-color: var(--color-primary);
+    }
+    .btn-primary:hover {
+        background-color: color-mix(in srgb, var(--color-primary) 85%, black);
+        transform: translateY(-1px);
+    }
+
+    .btn-gold {
+        @apply inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold shadow-soft transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95;
+        background-color: var(--color-accent);
+        color: var(--color-secondary);
+    }
+    .btn-gold:hover {
+        background-color: color-mix(in srgb, var(--color-accent) 85%, white);
+        transform: translateY(-1px);
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-white/40 px-6 py-3 text-sm font-semibold text-white transition duration-150 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60 active:scale-95;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95;
+        background-color: var(--color-secondary);
+    }
+    .btn-secondary:hover {
+        background-color: color-mix(in srgb, var(--color-secondary) 85%, black);
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-dark {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border-2 px-6 py-3 text-sm font-semibold transition duration-150 active:scale-95;
+        border-color: var(--color-secondary);
+        color: var(--color-secondary);
+    }
+    .btn-outline-dark:hover {
+        background-color: var(--color-secondary);
+        color: white;
+    }
+
+    .section-eyebrow {
+        @apply text-xs font-bold uppercase tracking-[0.2em];
+        color: var(--color-primary);
+    }
+
+    .text-brand-accent {
+        color: var(--color-accent);
+    }
+
+    /* Consistent "Edit" action link for admin table rows */
+    .admin-link {
+        color: var(--color-primary);
+        font-weight: 600;
+        transition: opacity 0.15s ease;
+    }
+    .admin-link:hover {
+        opacity: 0.65;
+    }
+
+    .bg-brand-primary-soft {
+        background-color: color-mix(in srgb, var(--color-primary) 12%, white);
+    }
+
+    .bg-brand-accent-soft {
+        background-color: color-mix(in srgb, var(--color-accent) 15%, white);
+    }
+
+    .bg-brand-hero {
+        background-image: linear-gradient(135deg,
+            color-mix(in srgb, var(--color-secondary) 95%, black) 0%,
+            var(--color-secondary) 55%,
+            color-mix(in srgb, var(--color-primary) 65%, var(--color-secondary) 35%) 100%);
+    }
+
+    .bg-brand-dark {
+        background-color: var(--color-secondary);
+    }
+
+    .bg-brand-cta {
+        background-image: linear-gradient(90deg,
+            color-mix(in srgb, var(--color-primary) 85%, black) 0%,
+            var(--color-primary) 100%);
+    }
+
+    /* Scroll-reveal animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+}
