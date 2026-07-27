@@ -398,6 +398,7 @@
 
         <div class="rounded-xl border border-navy-100 bg-white p-8">
             <h2 class="text-base font-semibold text-navy-900">Social Links (optional)</h2>
+            <p class="mt-1 text-sm text-navy-500">Shown as icon links in the site footer.</p>
             <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
                 <div>
                     <x-input-label for="facebook_url" value="Facebook URL" />
@@ -414,6 +415,78 @@
                     <x-text-input id="whatsapp_url" name="whatsapp_url" type="url" class="mt-1.5" :value="old('whatsapp_url', $settings->whatsapp_url)" />
                     <x-input-error :messages="$errors->get('whatsapp_url')" class="mt-2" />
                 </div>
+                <div>
+                    <x-input-label for="tiktok_url" value="TikTok URL" />
+                    <x-text-input id="tiktok_url" name="tiktok_url" type="url" class="mt-1.5" :value="old('tiktok_url', $settings->tiktok_url)" />
+                    <x-input-error :messages="$errors->get('tiktok_url')" class="mt-2" />
+                </div>
+                <div>
+                    <x-input-label for="youtube_url" value="YouTube URL" />
+                    <x-text-input id="youtube_url" name="youtube_url" type="url" class="mt-1.5" :value="old('youtube_url', $settings->youtube_url)" />
+                    <x-input-error :messages="$errors->get('youtube_url')" class="mt-2" />
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-xl border border-navy-100 bg-white p-8" x-data="{ agentPreview: { 1: null, 2: null, 3: null } }">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-base font-semibold text-navy-900">Floating WhatsApp Agents</h2>
+                    <p class="mt-1 text-sm text-navy-500">Up to 3 agents shown in a floating chat button on the bottom-left of every page. Leave a slot's name and number blank to hide it. Enter the number in international format without symbols or spaces, e.g. 233546553136.</p>
+                </div>
+                <label class="flex shrink-0 items-center gap-2 text-sm font-medium text-navy-700">
+                    <input type="hidden" name="whatsapp_agents_enabled" value="0">
+                    <input type="checkbox" name="whatsapp_agents_enabled" value="1" class="rounded border-navy-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" @checked(old('whatsapp_agents_enabled', $settings->whatsapp_agents_enabled))>
+                    Show button
+                </label>
+            </div>
+            <div class="mt-6 space-y-6">
+                @for ($i = 1; $i <= 3; $i++)
+                    <div class="grid grid-cols-1 gap-6 border-t border-navy-100 pt-6 first:border-t-0 first:pt-0 sm:grid-cols-[auto_1fr_1fr]">
+                        <div>
+                            <x-input-label value="Agent {{ $i }} Photo" />
+                            <div class="mt-1.5 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-navy-100 bg-navy-50">
+                                <template x-if="agentPreview[{{ $i }}]">
+                                    <img :src="agentPreview[{{ $i }}]" class="h-full w-full object-cover">
+                                </template>
+                                <template x-if="!agentPreview[{{ $i }}]">
+                                    @if ($settings->{'whatsapp_agent_'.$i.'_photo'})
+                                        <img src="{{ asset('storage/'.$settings->{'whatsapp_agent_'.$i.'_photo'}) }}" class="h-full w-full object-cover">
+                                    @else
+                                        <x-icon name="users" class="h-6 w-6 text-navy-300" />
+                                    @endif
+                                </template>
+                            </div>
+                            <label class="mt-2 inline-block cursor-pointer text-xs font-semibold" style="color: var(--color-primary)">
+                                Choose file
+                                <input type="file" name="whatsapp_agent_{{ $i }}_photo_upload" accept="image/*" class="sr-only" @change="agentPreview[{{ $i }}] = URL.createObjectURL($event.target.files[0])">
+                            </label>
+                            @if ($settings->{'whatsapp_agent_'.$i.'_photo'})
+                                <label class="mt-1 flex items-center gap-1.5 text-xs text-navy-500">
+                                    <input type="checkbox" name="remove_whatsapp_agent_{{ $i }}_photo" value="1" class="rounded border-navy-300"> Remove
+                                </label>
+                            @endif
+                            <x-input-error :messages="$errors->get('whatsapp_agent_'.$i.'_photo_upload')" class="mt-2" />
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <x-input-label for="whatsapp_agent_{{ $i }}_name" value="Agent {{ $i }} Name" />
+                                <label class="flex items-center gap-1.5 text-xs font-medium text-navy-500">
+                                    <input type="hidden" name="whatsapp_agent_{{ $i }}_active" value="0">
+                                    <input type="checkbox" name="whatsapp_agent_{{ $i }}_active" value="1" class="rounded border-navy-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]" @checked(old('whatsapp_agent_'.$i.'_active', $settings->{'whatsapp_agent_'.$i.'_active'}))>
+                                    Active
+                                </label>
+                            </div>
+                            <x-text-input id="whatsapp_agent_{{ $i }}_name" name="whatsapp_agent_{{ $i }}_name" type="text" class="mt-1.5" :value="old('whatsapp_agent_'.$i.'_name', $settings->{'whatsapp_agent_'.$i.'_name'})" placeholder="e.g. Ama (Crewing Desk)" />
+                            <x-input-error :messages="$errors->get('whatsapp_agent_'.$i.'_name')" class="mt-2" />
+                        </div>
+                        <div>
+                            <x-input-label for="whatsapp_agent_{{ $i }}_number" value="Agent {{ $i }} WhatsApp Number" />
+                            <x-text-input id="whatsapp_agent_{{ $i }}_number" name="whatsapp_agent_{{ $i }}_number" type="text" class="mt-1.5" :value="old('whatsapp_agent_'.$i.'_number', $settings->{'whatsapp_agent_'.$i.'_number'})" placeholder="233546553136" />
+                            <x-input-error :messages="$errors->get('whatsapp_agent_'.$i.'_number')" class="mt-2" />
+                        </div>
+                    </div>
+                @endfor
             </div>
         </div>
 

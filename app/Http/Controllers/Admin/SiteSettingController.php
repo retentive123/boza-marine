@@ -50,6 +50,24 @@ class SiteSettingController extends Controller
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'whatsapp_url' => ['nullable', 'url', 'max:255'],
+            'tiktok_url' => ['nullable', 'url', 'max:255'],
+            'youtube_url' => ['nullable', 'url', 'max:255'],
+            'whatsapp_agents_enabled' => ['nullable', 'boolean'],
+            'whatsapp_agent_1_name' => ['nullable', 'string', 'max:255'],
+            'whatsapp_agent_1_number' => ['nullable', 'string', 'max:20'],
+            'whatsapp_agent_1_active' => ['nullable', 'boolean'],
+            'whatsapp_agent_1_photo_upload' => ['nullable', 'image', 'max:2048'],
+            'remove_whatsapp_agent_1_photo' => ['nullable', 'boolean'],
+            'whatsapp_agent_2_name' => ['nullable', 'string', 'max:255'],
+            'whatsapp_agent_2_number' => ['nullable', 'string', 'max:20'],
+            'whatsapp_agent_2_active' => ['nullable', 'boolean'],
+            'whatsapp_agent_2_photo_upload' => ['nullable', 'image', 'max:2048'],
+            'remove_whatsapp_agent_2_photo' => ['nullable', 'boolean'],
+            'whatsapp_agent_3_name' => ['nullable', 'string', 'max:255'],
+            'whatsapp_agent_3_number' => ['nullable', 'string', 'max:20'],
+            'whatsapp_agent_3_active' => ['nullable', 'boolean'],
+            'whatsapp_agent_3_photo_upload' => ['nullable', 'image', 'max:2048'],
+            'remove_whatsapp_agent_3_photo' => ['nullable', 'boolean'],
             'color_primary' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'color_secondary' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'color_accent' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
@@ -111,6 +129,13 @@ class SiteSettingController extends Controller
 
         foreach ($navVisibilityFields as $field) {
             $validated[$field] = $request->boolean($field);
+        }
+
+        $validated['whatsapp_agents_enabled'] = $request->boolean('whatsapp_agents_enabled');
+
+        for ($i = 1; $i <= 3; $i++) {
+            $validated["whatsapp_agent_{$i}_active"] = $request->boolean("whatsapp_agent_{$i}_active");
+            $validated["whatsapp_agent_{$i}_photo"] = $this->resolveImageField($request, "whatsapp_agent_{$i}_photo_upload", "remove_whatsapp_agent_{$i}_photo", 'branding', $settings->{"whatsapp_agent_{$i}_photo"});
         }
 
         $settings->update(collect($validated)->reject(fn ($value, $key) => str_ends_with($key, '_upload') || str_starts_with($key, 'remove_'))->all());

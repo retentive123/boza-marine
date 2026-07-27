@@ -272,6 +272,36 @@
                         </span>
                     </li>
                 </ul>
+
+                @if ($settings->facebook_url || $settings->linkedin_url || $settings->whatsapp_url || $settings->tiktok_url || $settings->youtube_url)
+                    <div class="mt-6 flex items-center gap-3">
+                        @if ($settings->facebook_url)
+                            <a href="{{ $settings->facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--color-accent)]">
+                                <x-icon name="facebook" class="h-4 w-4" />
+                            </a>
+                        @endif
+                        @if ($settings->linkedin_url)
+                            <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--color-accent)]">
+                                <x-icon name="linkedin" class="h-4 w-4" />
+                            </a>
+                        @endif
+                        @if ($settings->tiktok_url)
+                            <a href="{{ $settings->tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--color-accent)]">
+                                <x-icon name="tiktok" class="h-4 w-4" />
+                            </a>
+                        @endif
+                        @if ($settings->youtube_url)
+                            <a href="{{ $settings->youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--color-accent)]">
+                                <x-icon name="youtube" class="h-4 w-4" />
+                            </a>
+                        @endif
+                        @if ($settings->whatsapp_url)
+                            <a href="{{ $settings->whatsapp_url }}" target="_blank" rel="noopener" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--color-accent)]">
+                                <x-icon name="whatsapp" class="h-4 w-4" />
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -284,6 +314,11 @@
     </footer>
 
     <x-back-to-top />
+
+    @php $whatsappAgents = $settings?->whatsappAgents() ?? collect(); @endphp
+    @if ($whatsappAgents->isNotEmpty())
+        <x-whatsapp-agents :agents="$whatsappAgents" />
+    @endif
 
 </body>
 </html>

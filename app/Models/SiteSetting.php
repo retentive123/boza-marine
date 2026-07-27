@@ -30,6 +30,21 @@ class SiteSetting extends Model
         'facebook_url',
         'linkedin_url',
         'whatsapp_url',
+        'tiktok_url',
+        'youtube_url',
+        'whatsapp_agents_enabled',
+        'whatsapp_agent_1_name',
+        'whatsapp_agent_1_number',
+        'whatsapp_agent_1_active',
+        'whatsapp_agent_1_photo',
+        'whatsapp_agent_2_name',
+        'whatsapp_agent_2_number',
+        'whatsapp_agent_2_active',
+        'whatsapp_agent_2_photo',
+        'whatsapp_agent_3_name',
+        'whatsapp_agent_3_number',
+        'whatsapp_agent_3_active',
+        'whatsapp_agent_3_photo',
         'logo_path',
         'favicon_path',
         'about_image',
@@ -63,10 +78,31 @@ class SiteSetting extends Model
         'nav_news_visible' => 'boolean',
         'nav_careers_visible' => 'boolean',
         'nav_contact_visible' => 'boolean',
+        'whatsapp_agents_enabled' => 'boolean',
+        'whatsapp_agent_1_active' => 'boolean',
+        'whatsapp_agent_2_active' => 'boolean',
+        'whatsapp_agent_3_active' => 'boolean',
     ];
 
     public static function current(): self
     {
         return static::first() ?? static::create([]);
+    }
+
+    public function whatsappAgents(): \Illuminate\Support\Collection
+    {
+        if (! $this->whatsapp_agents_enabled) {
+            return collect();
+        }
+
+        return collect([1, 2, 3])
+            ->map(fn ($i) => [
+                'name' => $this->{"whatsapp_agent_{$i}_name"},
+                'number' => $this->{"whatsapp_agent_{$i}_number"},
+                'active' => $this->{"whatsapp_agent_{$i}_active"},
+                'photo' => $this->{"whatsapp_agent_{$i}_photo"},
+            ])
+            ->filter(fn ($agent) => $agent['active'] && filled($agent['name']) && filled($agent['number']))
+            ->values();
     }
 }

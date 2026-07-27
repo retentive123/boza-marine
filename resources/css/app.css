@@ -101,6 +101,10 @@
         background-color: color-mix(in srgb, var(--color-accent) 15%, white);
     }
 
+    .bg-brand-secondary-soft {
+        background-color: color-mix(in srgb, var(--color-secondary) 10%, white);
+    }
+
     .bg-brand-hero {
         background-image: linear-gradient(135deg,
             color-mix(in srgb, var(--color-secondary) 95%, black) 0%,
