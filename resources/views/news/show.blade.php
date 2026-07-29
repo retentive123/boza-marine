@@ -50,4 +50,28 @@
         </div>
     </section>
 
+    <script type="application/ld+json">
+        {!! json_encode(array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'NewsArticle',
+            'headline' => $post->title,
+            'description' => $post->excerpt,
+            'image' => $post->image_path ? asset('storage/'.$post->image_path) : null,
+            'datePublished' => $post->published_at?->toAtomString(),
+            'dateModified' => $post->updated_at->toAtomString(),
+            'author' => [
+                '@type' => 'Organization',
+                'name' => $settings->company_name ?? 'Boza Marine Solutions and Crewing Services',
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => $settings->company_name ?? 'Boza Marine Solutions and Crewing Services',
+                'logo' => $settings->logo_path ? [
+                    '@type' => 'ImageObject',
+                    'url' => asset('storage/'.$settings->logo_path),
+                ] : null,
+            ],
+        ]), JSON_UNESCAPED_SLASHES) !!}
+    </script>
+
 </x-layouts.public>

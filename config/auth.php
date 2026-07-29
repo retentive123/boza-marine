@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Candidate;
 use App\Models\User;
 
 return [
@@ -42,6 +43,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'candidate' => [
+            'driver' => 'session',
+            'provider' => 'candidates',
+        ],
     ],
 
     /*
@@ -71,6 +77,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'candidates' => [
+            'driver' => 'eloquent',
+            'model' => Candidate::class,
+        ],
     ],
 
     /*

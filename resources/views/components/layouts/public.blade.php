@@ -1,15 +1,66 @@
-@props(['settings' => null, 'title' => null, 'metaDescription' => null])
+@props(['settings' => null, 'title' => null, 'metaDescription' => null, 'canonical' => null])
+@php
+    $pageTitle = isset($title) ? $title.' — Boza Marine Solutions' : 'Boza Marine Solutions and Crewing Services';
+    $pageDescription = $metaDescription ?? 'Boza Marine Solutions and Crewing Services — Ghanaian-owned maritime crewing, HR outsourcing, consultancy, and logistics for offshore and land-based operations.';
+    $canonicalUrl = $canonical ?? url()->current();
+    $ogImagePath = $settings->hero_background_image ?? $settings->logo_path ?? null;
+    $ogImageUrl = $ogImagePath ? asset('storage/'.$ogImagePath) : null;
+@endphp
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ $metaDescription ?? 'Boza Marine Solutions and Crewing Services — Ghanaian-owned maritime crewing, HR outsourcing, consultancy, and logistics for offshore and land-based operations.' }}">
-    <title>{{ isset($title) ? $title.' — Boza Marine Solutions' : 'Boza Marine Solutions and Crewing Services' }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    <title>{{ $pageTitle }}</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ $settings->company_name ?? 'Boza Marine Solutions' }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    @if ($ogImageUrl)
+        <meta property="og:image" content="{{ $ogImageUrl }}">
+    @endif
+
+    <meta name="twitter:card" content="{{ $ogImageUrl ? 'summary_large_image' : 'summary' }}">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    @if ($ogImageUrl)
+        <meta name="twitter:image" content="{{ $ogImageUrl }}">
+    @endif
 
     @include('partials.brand-styles')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $settings->company_name ?? 'Boza Marine Solutions and Crewing Services',
+            'url' => url('/'),
+            'logo' => $settings->logo_path ? asset('storage/'.$settings->logo_path) : null,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $settings->address ?? 'Takoradi, Western Region, Ghana',
+                'addressCountry' => 'GH',
+            ],
+            'contactPoint' => [
+                '@type' => 'ContactPoint',
+                'telephone' => $settings->phone_primary ?? null,
+                'email' => $settings->email_primary ?? null,
+                'contactType' => 'customer service',
+            ],
+            'sameAs' => array_values(array_filter([
+                $settings->facebook_url ?? null,
+                $settings->linkedin_url ?? null,
+                $settings->tiktok_url ?? null,
+                $settings->youtube_url ?? null,
+            ])),
+        ], JSON_UNESCAPED_SLASHES) !!}
+    </script>
 </head>
 <body class="flex min-h-screen flex-col bg-white font-sans text-navy-900">
 

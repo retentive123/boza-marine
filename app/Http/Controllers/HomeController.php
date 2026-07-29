@@ -23,7 +23,7 @@ class HomeController extends Controller
             'settings' => SiteSetting::current(),
             'heroSlides' => HeroSlide::where('is_active', true)->orderBy('order')->get(),
             'heroBackgroundImages' => HeroBackgroundImage::where('is_active', true)->orderBy('order')->get(),
-            'services' => Service::where('is_active', true)->orderBy('order')->get(),
+            'services' => Service::where('is_active', true)->orderBy('order')->take(3)->get(),
             'differentiators' => Differentiator::orderBy('order')->get(),
             'stats' => Stat::orderBy('order')->get(),
             'testimonials' => Testimonial::where('is_active', true)->orderBy('order')->get(),

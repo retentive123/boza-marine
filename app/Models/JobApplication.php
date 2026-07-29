@@ -9,6 +9,7 @@ class JobApplication extends Model
 {
     protected $fillable = [
         'job_posting_id',
+        'candidate_id',
         'full_name',
         'email',
         'phone',
@@ -21,5 +22,10 @@ class JobApplication extends Model
     public function jobPosting(): BelongsTo
     {
         return $this->belongsTo(JobPosting::class);
+    }
+
+    public function candidate(): BelongsTo
+    {
+        return $this->belongsTo(Candidate::class);
     }
 }

@@ -14,10 +14,16 @@
 
     <section class="py-20 sm:py-24">
         <div class="container-boza">
-            <div class="flex flex-wrap items-center gap-3">
-                <a href="{{ route('careers.index') }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === '' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">All Openings</a>
-                <a href="{{ route('careers.index', ['sector' => 'Offshore']) }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === 'Offshore' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">Offshore</a>
-                <a href="{{ route('careers.index', ['sector' => 'Land-Based']) }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === 'Land-Based' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">Land-Based</a>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="{{ route('careers.index') }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === '' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">All Openings</a>
+                    <a href="{{ route('careers.index', ['sector' => 'Offshore']) }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === 'Offshore' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">Offshore</a>
+                    <a href="{{ route('careers.index', ['sector' => 'Land-Based']) }}" class="rounded-full px-4 py-2 text-sm font-semibold {{ $sector === 'Land-Based' ? 'bg-[var(--color-primary)] text-white' : 'bg-navy-50 text-navy-600 hover:bg-navy-100' }}">Land-Based</a>
+                </div>
+                <a href="{{ auth('candidate')->check() ? route('candidate.applications.index') : route('candidate.login') }}" class="flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:opacity-80">
+                    <x-icon name="users" class="h-4 w-4" />
+                    {{ auth('candidate')->check() ? 'My Applications' : 'Track Your Application' }}
+                </a>
             </div>
 
             @if ($jobs->isEmpty())

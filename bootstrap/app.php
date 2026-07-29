@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Two independent auth guards share this app: 'web' for internal staff
+        // (admin panel) and 'candidate' for job applicants (/careers/*). Route
+        // guests/authenticated-redirects to the right login/home per guard.
+        $middleware->redirectGuestsTo(fn ($request) => $request->is('careers/*')
+            ? route('candidate.login')
+            : route('login'));
+
+        $middleware->redirectUsersTo(fn ($request) => $request->is('careers/*')
+            ? route('candidate.applications.index')
+            : route('dashboard'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

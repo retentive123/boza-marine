@@ -15,6 +15,17 @@
 
     <section class="py-20 sm:py-24">
         <div class="container-boza mx-auto max-w-2xl">
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-brand-primary-soft px-5 py-3 text-sm">
+                <span class="font-medium text-navy-700">Signed in as <strong>{{ $candidate->name }}</strong></span>
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('candidate.applications.index') }}" class="font-semibold text-[var(--color-primary)] hover:opacity-80">My Applications</a>
+                    <form method="POST" action="{{ route('candidate.logout') }}">
+                        @csrf
+                        <button type="submit" class="font-semibold text-navy-500 hover:text-navy-800">Sign Out</button>
+                    </form>
+                </div>
+            </div>
+
             <form method="POST" action="{{ route('careers.apply.store') }}" enctype="multipart/form-data" class="space-y-6 rounded-2xl border border-navy-100 p-8 shadow-sm sm:p-10">
                 @csrf
 
@@ -32,12 +43,12 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
                         <x-input-label for="full_name" value="Full Name" />
-                        <x-text-input id="full_name" name="full_name" type="text" class="mt-1.5" :value="old('full_name')" required autofocus />
+                        <x-text-input id="full_name" name="full_name" type="text" class="mt-1.5" :value="old('full_name', $candidate->name)" required autofocus />
                         <x-input-error :messages="$errors->get('full_name')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="email" value="Email Address" />
-                        <x-text-input id="email" name="email" type="email" class="mt-1.5" :value="old('email')" required />
+                        <x-text-input id="email" name="email" type="email" class="mt-1.5" :value="old('email', $candidate->email)" required />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                 </div>
@@ -45,7 +56,7 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
                         <x-input-label for="phone" value="Phone Number" />
-                        <x-text-input id="phone" name="phone" type="text" class="mt-1.5" :value="old('phone')" />
+                        <x-text-input id="phone" name="phone" type="text" class="mt-1.5" :value="old('phone', $candidate->phone)" />
                         <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                     </div>
                     <div>

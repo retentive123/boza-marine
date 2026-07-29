@@ -62,4 +62,29 @@
         </div>
     </section>
 
+    <script type="application/ld+json">
+        {!! json_encode(array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'JobPosting',
+            'title' => $job->title,
+            'description' => $job->description,
+            'datePosted' => $job->created_at->toAtomString(),
+            'validThrough' => $job->closing_date?->toAtomString(),
+            'employmentType' => $job->employment_type,
+            'hiringOrganization' => [
+                '@type' => 'Organization',
+                'name' => $settings->company_name ?? 'Boza Marine Solutions and Crewing Services',
+                'sameAs' => url('/'),
+            ],
+            'jobLocation' => [
+                '@type' => 'Place',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressLocality' => $job->location ?? ($settings->address ?? 'Ghana'),
+                    'addressCountry' => 'GH',
+                ],
+            ],
+        ]), JSON_UNESCAPED_SLASHES) !!}
+    </script>
+
 </x-layouts.public>

@@ -343,6 +343,12 @@
                         </a>
                     @endforeach
                 </div>
+
+                <div class="reveal mt-12 text-center">
+                    <a href="{{ route('services.index') }}" class="btn-primary">
+                        View All Services <x-icon name="arrow-right" class="h-4 w-4" />
+                    </a>
+                </div>
             </div>
         </section>
     @endif
@@ -370,14 +376,15 @@
     </section>
 
     {{-- Process --}}
-    <section class="py-20 sm:py-28">
+    <section class="bg-navy-50/50 py-20 sm:py-28">
         <div class="container-boza">
-            <div class="mx-auto max-w-2xl text-center">
+            <div class="reveal mx-auto max-w-2xl text-center">
                 <p class="section-eyebrow">How We Work</p>
                 <h2 class="font-display mt-3 text-3xl font-semibold text-navy-900 sm:text-4xl">Our process</h2>
             </div>
 
-            <div class="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
+            <div class="relative mt-16 grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-5">
+                <div class="pointer-events-none absolute inset-x-0 top-6 hidden border-t-2 border-dashed border-navy-200 lg:block"></div>
                 @foreach ([
                     ['Consultation', 'Understand your vessel, contract, or manpower needs.'],
                     ['Sourcing', 'Shortlist from our database of certified seafarers and shore staff.'],
@@ -385,10 +392,14 @@
                     ['Management', 'On-going HR, payroll, welfare, and performance tracking.'],
                     ['Review', 'Quarterly performance and compliance review.'],
                 ] as $index => [$title, $description])
-                    <div class="reveal relative rounded-xl border border-navy-100 p-6" style="transition-delay: {{ $index * 90 }}ms">
-                        <span class="font-display text-3xl font-semibold text-[color-mix(in_srgb,var(--color-primary)_18%,white)]">0{{ $index + 1 }}</span>
-                        <h3 class="mt-2 text-base font-semibold text-navy-900">{{ $title }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-navy-600">{{ $description }}</p>
+                    <div class="reveal group relative text-center" style="transition-delay: {{ $index * 90 }}ms">
+                        <span class="relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-full text-base font-bold text-white shadow-soft transition duration-300 group-hover:scale-110" style="background-color: var(--color-primary)">
+                            {{ $index + 1 }}
+                        </span>
+                        <div class="mt-5 rounded-xl border border-navy-100 bg-white p-5 shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-soft">
+                            <h3 class="text-base font-semibold text-navy-900">{{ $title }}</h3>
+                            <p class="mt-2 text-sm leading-relaxed text-navy-600">{{ $description }}</p>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -503,75 +514,71 @@
         </section>
     @endif
 
-    {{-- Showcase carousel (text + rotating images) --}}
-    @if ($showcaseSlideData->isNotEmpty())
+    {{-- Life at Boza: rotating carousel + gallery mosaic, one unified showcase --}}
+    @php
+        $showcaseHasCarousel = $showcaseSlideData->isNotEmpty();
+        $showcaseHasMosaic = $galleryPreview->count() && ($settings->nav_gallery_visible ?? true);
+    @endphp
+    @if ($showcaseHasCarousel || $showcaseHasMosaic)
         <section class="bg-brand-dark py-20 text-white sm:py-24">
-            <div class="container-boza grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-                <div class="reveal">
+            <div class="container-boza">
+                <div class="reveal mx-auto max-w-2xl text-center">
                     <p class="section-eyebrow text-brand-accent">Behind the Scenes</p>
                     <h2 class="font-display mt-3 text-3xl font-semibold sm:text-4xl">{{ $settings->showcase_title ?: 'Life at Boza' }}</h2>
-                    <p class="mt-4 max-w-md text-white/70">
+                    <p class="mt-4 text-white/70">
                         {{ $settings->showcase_text ?: 'A glimpse of our crew, operations, and the people delivering certified, compliant service across West Africa.' }}
                     </p>
-                    @if ($settings->nav_gallery_visible ?? true)
-                        <a href="{{ route('gallery') }}" class="btn-outline mt-7 inline-flex">
-                            View Full Gallery <x-icon name="arrow-right" class="h-4 w-4" />
-                        </a>
+                </div>
+
+                <div class="mt-12 grid grid-cols-1 gap-6 {{ $showcaseHasCarousel && $showcaseHasMosaic ? 'lg:grid-cols-5' : '' }}">
+                    @if ($showcaseHasCarousel)
+                        <div class="reveal {{ $showcaseHasMosaic ? 'lg:col-span-3' : 'mx-auto w-full max-w-3xl' }}" x-data="heroCarousel(@js($showcaseSlideData), 4000)">
+                            <div class="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-soft">
+                                <template x-for="(slide, index) in slides" :key="index">
+                                    <div
+                                        x-show="current === index"
+                                        x-transition:enter="transition ease-out duration-700"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        x-transition:leave="transition ease-in duration-500"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        class="absolute inset-0 bg-cover bg-center"
+                                        :style="`background-image: url(${slide.image})`"
+                                    ></div>
+                                </template>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0"></div>
+                                <template x-if="active.caption">
+                                    <p class="absolute inset-x-0 bottom-0 p-4 text-sm font-medium text-white" x-text="active.caption"></p>
+                                </template>
+                            </div>
+
+                            <div class="mt-5 flex items-center justify-center gap-2" x-show="slides.length > 1">
+                                <template x-for="(slide, index) in slides" :key="index">
+                                    <button @click="goTo(index)" :class="current === index ? 'w-8 bg-[var(--color-accent)]' : 'w-2 bg-white/30'" class="h-2 rounded-full transition-all" :aria-label="'Go to image ' + (index + 1)"></button>
+                                </template>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($showcaseHasMosaic)
+                        <div class="reveal grid grid-cols-2 gap-3 {{ $showcaseHasCarousel ? 'lg:col-span-2' : 'sm:grid-cols-3 lg:grid-cols-6' }}" style="transition-delay: 120ms">
+                            @foreach (($showcaseHasCarousel ? $galleryPreview->take(4) : $galleryPreview) as $image)
+                                <a href="{{ route('gallery') }}" class="group aspect-square overflow-hidden rounded-xl bg-white/5" style="transition-delay: {{ $loop->index * 70 }}ms">
+                                    <img src="{{ asset('storage/'.$image->image_path) }}" alt="{{ $image->caption }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                                </a>
+                            @endforeach
+                        </div>
                     @endif
                 </div>
 
-                <div class="reveal" style="transition-delay: 120ms" x-data="heroCarousel(@js($showcaseSlideData), 4000)">
-                    <div class="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
-                        <template x-for="(slide, index) in slides" :key="index">
-                            <div
-                                x-show="current === index"
-                                x-transition:enter="transition ease-out duration-700"
-                                x-transition:enter-start="opacity-0"
-                                x-transition:enter-end="opacity-100"
-                                x-transition:leave="transition ease-in duration-500"
-                                x-transition:leave-start="opacity-100"
-                                x-transition:leave-end="opacity-0"
-                                class="absolute inset-0 bg-cover bg-center"
-                                :style="`background-image: url(${slide.image})`"
-                            ></div>
-                        </template>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0"></div>
-                        <template x-if="active.caption">
-                            <p class="absolute inset-x-0 bottom-0 p-4 text-sm font-medium text-white" x-text="active.caption"></p>
-                        </template>
-                    </div>
-
-                    <div class="mt-5 flex items-center justify-center gap-2" x-show="slides.length > 1">
-                        <template x-for="(slide, index) in slides" :key="index">
-                            <button @click="goTo(index)" :class="current === index ? 'w-8 bg-[var(--color-accent)]' : 'w-2 bg-white/30'" class="h-2 rounded-full transition-all" :aria-label="'Go to image ' + (index + 1)"></button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- Gallery preview --}}
-    @if ($galleryPreview->count() && ($settings->nav_gallery_visible ?? true))
-        <section class="py-20 sm:py-28">
-            <div class="container-boza">
-                <div class="reveal flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-                    <div>
-                        <p class="section-eyebrow">Gallery</p>
-                        <h2 class="font-display mt-3 text-3xl font-semibold text-navy-900 sm:text-4xl">Boza in action</h2>
-                    </div>
-                    <a href="{{ route('gallery') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary)]">
-                        View full gallery <x-icon name="arrow-right" class="h-4 w-4" />
-                    </a>
-                </div>
-
-                <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-                    @foreach ($galleryPreview as $image)
-                        <a href="{{ route('gallery') }}" class="reveal group aspect-square overflow-hidden rounded-xl bg-navy-50" style="transition-delay: {{ $loop->index * 70 }}ms">
-                            <img src="{{ asset('storage/'.$image->image_path) }}" alt="{{ $image->caption }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                @if ($settings->nav_gallery_visible ?? true)
+                    <div class="reveal mt-10 text-center">
+                        <a href="{{ route('gallery') }}" class="btn-outline">
+                            View Full Gallery <x-icon name="arrow-right" class="h-4 w-4" />
                         </a>
-                    @endforeach
-                </div>
+                    </div>
+                @endif
             </div>
         </section>
     @endif

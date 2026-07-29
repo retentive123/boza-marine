@@ -6,6 +6,7 @@ use App\Models\JobApplication;
 use App\Models\JobPosting;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobApplicationController extends Controller
 {
@@ -21,6 +22,7 @@ class JobApplicationController extends Controller
             'settings' => SiteSetting::current(),
             'jobPosting' => $jobPosting,
             'jobs' => JobPosting::where('is_active', true)->orderBy('title')->get(),
+            'candidate' => Auth::guard('candidate')->user(),
         ]);
     }
 
@@ -40,6 +42,7 @@ class JobApplicationController extends Controller
 
         JobApplication::create([
             'job_posting_id' => $validated['job_posting_id'] ?? null,
+            'candidate_id' => Auth::guard('candidate')->id(),
             'full_name' => $validated['full_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
@@ -50,7 +53,7 @@ class JobApplicationController extends Controller
         ]);
 
         return redirect()
-            ->route('careers.index')
-            ->with('success', 'Thank you — your application has been received. Our recruitment team will be in touch if your profile matches an opening.');
+            ->route('candidate.applications.index')
+            ->with('success', 'Thank you — your application has been received. Our recruitment team will be in touch if your profile matches an opening. You can track its status below.');
     }
 }
