@@ -11,7 +11,7 @@ class ServiceController extends Controller
     {
         return view('services.index', [
             'settings' => SiteSetting::current(),
-            'services' => Service::where('is_active', true)->orderBy('order')->get(),
+            'services' => Service::where('is_active', true)->orderBy('order')->orderBy('id')->get(),
         ]);
     }
 
@@ -25,6 +25,7 @@ class ServiceController extends Controller
             'otherServices' => Service::where('is_active', true)
                 ->where('id', '!=', $service->id)
                 ->orderBy('order')
+                ->orderBy('id')
                 ->take(4)
                 ->get(),
         ]);

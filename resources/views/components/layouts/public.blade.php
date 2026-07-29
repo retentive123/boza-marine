@@ -216,8 +216,41 @@
             </form>
         </div>
 
-        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="border-t border-navy-100 bg-white lg:hidden">
-            <div class="container-boza flex flex-col gap-1 py-4">
+        {{-- Mobile menu backdrop --}}
+        <div
+            x-show="open"
+            x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="open = false"
+            class="fixed inset-0 z-[60] bg-navy-900/50 lg:hidden"
+        ></div>
+
+        {{-- Mobile menu drawer --}}
+        <div
+            x-show="open"
+            x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="-translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full"
+            @keydown.escape.window="open = false"
+            class="fixed inset-y-0 left-0 z-[70] flex w-1/2 min-w-[240px] max-w-xs flex-col overflow-y-auto bg-white shadow-2xl lg:hidden"
+        >
+            <div class="flex items-center justify-between border-b border-navy-100 px-4 py-4">
+                <a href="{{ route('home') }}" @click="open = false"><x-logo /></a>
+                <button @click="open = false" aria-label="Close menu" class="text-navy-500 transition active:scale-90">
+                    <x-icon name="x" class="h-6 w-6" />
+                </button>
+            </div>
+
+            <div class="flex flex-1 flex-col gap-1 px-4 py-4">
                 @foreach ($navLinks as $item)
                     <a href="{{ route($item['route']) }}" class="rounded-md px-3 py-2.5 text-sm font-semibold transition-colors duration-150 active:scale-95 {{ request()->routeIs($item['route'].'*') ? 'bg-brand-primary-soft text-[var(--color-primary)]' : 'text-navy-700 hover:bg-navy-50' }}">
                         {{ $item['label'] }}

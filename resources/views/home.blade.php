@@ -231,6 +231,8 @@
         </section>
     @endif
 
+    @include('partials.clients-strip')
+
     {{-- About intro --}}
     <section class="py-20 sm:py-28">
         <div class="container-boza grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center">

@@ -164,6 +164,8 @@
         </div>
     </section>
 
+    @include('partials.clients-strip')
+
     {{-- CTA --}}
     <section class="bg-brand-cta">
         <div class="reveal container-boza flex flex-col items-center gap-6 py-16 text-center text-white">

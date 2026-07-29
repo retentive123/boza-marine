@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Differentiator;
 use App\Models\SiteSetting;
 use App\Models\Stat;
@@ -15,6 +16,7 @@ class PageController extends Controller
             'settings' => SiteSetting::current(),
             'differentiators' => Differentiator::orderBy('order')->get(),
             'stats' => Stat::orderBy('order')->get(),
+            'clients' => Client::where('is_active', true)->orderBy('order')->get(),
         ]);
     }
 

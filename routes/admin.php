@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DifferentiatorController;
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('jobs', JobPostingController::class)->except('show')->parameters(['jobs' => 'job']);
     Route::resource('testimonials', TestimonialController::class)->except('show');
     Route::resource('differentiators', DifferentiatorController::class)->except('show');
+    Route::resource('clients', ClientController::class)->except('show');
     Route::resource('stats', StatController::class)->except('show');
     Route::resource('hero-slides', HeroSlideController::class)->except('show');
     Route::resource('hero-background', HeroBackgroundImageController::class)->except('show')->parameters(['hero-background' => 'heroBackground']);

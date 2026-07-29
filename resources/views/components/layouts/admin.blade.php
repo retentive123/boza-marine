@@ -42,6 +42,7 @@
                             'admin.team.index' => ['Leadership Team', 'users'],
                             'admin.testimonials.index' => ['Testimonials', 'star'],
                             'admin.differentiators.index' => ['Differentiators', 'shield-check'],
+                            'admin.clients.index' => ['Companies We\'ve Worked For', 'building-office'],
                             'admin.stats.index' => ['Stats', 'bolt'],
                         ],
                         'Inbox' => [

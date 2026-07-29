@@ -8,7 +8,11 @@
     </div>
     <div>
         <x-input-label for="category" value="Category" />
-        <x-text-input id="category" name="category" type="text" class="mt-1.5" :value="old('category', $service->category ?? '')" required placeholder="e.g. Offshore, Consultancy" />
+        <select id="category" name="category" class="mt-1.5 w-full rounded-md border-navy-200 text-navy-900 shadow-sm focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]" required>
+            @foreach ($categories as $category)
+                <option value="{{ $category }}" @selected(old('category', $service->category ?? '') === $category)>{{ $category }}</option>
+            @endforeach
+        </select>
         <x-input-error :messages="$errors->get('category')" class="mt-2" />
     </div>
 </div>

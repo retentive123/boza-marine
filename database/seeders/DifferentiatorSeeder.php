@@ -40,6 +40,12 @@ class DifferentiatorSeeder extends Seeder
                 'icon' => 'globe',
                 'order' => 5,
             ],
+            [
+                'title' => 'Cadet Development',
+                'description' => 'We recruit and maintain a database of Engine and Deck Cadets, including female candidates, ready to learn and build experience at sea.',
+                'icon' => 'academic-cap',
+                'order' => 6,
+            ],
         ];
 
         foreach ($items as $item) {

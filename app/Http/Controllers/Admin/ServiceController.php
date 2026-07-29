@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Concerns\HandlesImageUploads;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Support\ServiceCategoryCatalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -15,13 +16,15 @@ class ServiceController extends Controller
     public function index()
     {
         return view('admin.services.index', [
-            'services' => Service::orderBy('order')->get(),
+            'services' => Service::orderBy('order')->orderBy('id')->get(),
         ]);
     }
 
     public function create()
     {
-        return view('admin.services.create');
+        return view('admin.services.create', [
+            'categories' => $this->categoryOptions(),
+        ]);
     }
 
     public function store(Request $request)
@@ -29,7 +32,7 @@ class ServiceController extends Controller
         $validated = $this->validated($request);
         unset($validated['image'], $validated['remove_image']);
         $validated['slug'] = $this->uniqueSlug($validated['title']);
-        $validated['deliverables'] = $this->deliverablesFromInput($request->input('deliverables', ''));
+        $validated['deliverables'] = $this->deliverablesFromInput($request->input('deliverables') ?? '');
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
@@ -43,7 +46,10 @@ class ServiceController extends Controller
 
     public function edit(Service $service)
     {
-        return view('admin.services.edit', ['service' => $service]);
+        return view('admin.services.edit', [
+            'service' => $service,
+            'categories' => $this->categoryOptions($service->category),
+        ]);
     }
 
     public function update(Request $request, Service $service)
@@ -55,7 +61,7 @@ class ServiceController extends Controller
             $validated['slug'] = $this->uniqueSlug($validated['title'], $service->id);
         }
 
-        $validated['deliverables'] = $this->deliverablesFromInput($request->input('deliverables', ''));
+        $validated['deliverables'] = $this->deliverablesFromInput($request->input('deliverables') ?? '');
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->boolean('remove_image')) {
@@ -82,7 +88,7 @@ class ServiceController extends Controller
     {
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:'.implode(',', $this->categoryOptions())],
             'icon' => ['nullable', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'max:4096'],
             'remove_image' => ['nullable', 'boolean'],
@@ -92,9 +98,24 @@ class ServiceController extends Controller
         ]);
     }
 
-    protected function deliverablesFromInput(string $input): array
+    /**
+     * The fixed category list, plus any legacy category already saved on a
+     * service (so old records outside the fixed list remain valid to edit).
+     */
+    protected function categoryOptions(?string $include = null): array
     {
-        return collect(explode("\n", $input))
+        return collect(ServiceCategoryCatalog::categories())
+            ->merge(Service::pluck('category'))
+            ->when($include, fn ($options) => $options->push($include))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    protected function deliverablesFromInput(?string $input): array
+    {
+        return collect(explode("\n", $input ?? ''))
             ->map(fn ($line) => trim($line))
             ->filter()
             ->values()
