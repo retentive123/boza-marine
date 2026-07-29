@@ -49,6 +49,7 @@
                         ],
                         'Configuration' => [
                             'admin.settings.edit' => ['Site Settings', 'globe'],
+                            'admin.users.index' => ['Staff Users', 'users'],
                         ],
                     ];
                 @endphp
@@ -103,6 +104,12 @@
             @if (session('success'))
                 <div class="mx-6 mt-6 flex items-center gap-2 rounded-md bg-brand-primary-soft px-4 py-3 text-sm font-medium text-[var(--color-primary)]">
                     <x-icon name="check" class="h-5 w-5 shrink-0" /> {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mx-6 mt-6 flex items-center gap-2 rounded-md bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                    <x-icon name="x" class="h-5 w-5 shrink-0" /> {{ session('error') }}
                 </div>
             @endif
 
