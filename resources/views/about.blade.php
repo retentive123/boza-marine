@@ -16,7 +16,7 @@
             @if ($settings->about_image)
                 <div class="reveal order-1">
                     <div class="flex h-80 w-full items-center justify-center overflow-hidden rounded-2xl bg-navy-50 shadow-soft sm:h-[26rem]">
-                        <img src="{{ asset('storage/'.$settings->about_image) }}" alt="{{ $settings->company_name }}" class="h-full w-full object-contain">
+                        <img src="{{ asset('storage/'.$settings->about_image) }}" alt="{{ $settings->company_name }}" loading="lazy" class="h-full w-full object-contain">
                     </div>
                 </div>
             @endif

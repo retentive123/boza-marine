@@ -1,6 +1,6 @@
 @props(['settings' => null, 'title' => null, 'metaDescription' => null, 'canonical' => null])
 @php
-    $pageTitle = isset($title) ? $title.' — Boza Marine Solutions' : 'Boza Marine Solutions and Crewing Services';
+    $pageTitle = isset($title) ? $title.' — Boza Marine Solutions' : 'Boza Marine Solutions and Crewing Services — Maritime Crewing & HR Outsourcing in Ghana';
     $pageDescription = $metaDescription ?? 'Boza Marine Solutions and Crewing Services — Ghanaian-owned maritime crewing, HR outsourcing, consultancy, and logistics for offshore and land-based operations.';
     $canonicalUrl = $canonical ?? url()->current();
     $ogImagePath = $settings->hero_background_image ?? $settings->logo_path ?? null;
@@ -59,7 +59,7 @@
                 $settings->tiktok_url ?? null,
                 $settings->youtube_url ?? null,
             ])),
-        ], JSON_UNESCAPED_SLASHES) !!}
+        ], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!}
     </script>
 </head>
 <body class="flex min-h-screen flex-col bg-white font-sans text-navy-900" x-data="{ open: false, search: false }">

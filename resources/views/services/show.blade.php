@@ -21,6 +21,12 @@
     <section class="py-20 sm:py-24">
         <div class="container-boza grid grid-cols-1 gap-14 lg:grid-cols-3">
             <div class="lg:col-span-2">
+                @if ($service->image_path)
+                    <div class="mb-10 overflow-hidden rounded-2xl shadow-soft">
+                        <img src="{{ asset('storage/'.$service->image_path) }}" alt="{{ $service->title }}" class="h-72 w-full object-cover sm:h-96">
+                    </div>
+                @endif
+
                 <p class="text-lg leading-relaxed text-navy-700">{{ $service->description }}</p>
 
                 @if (!empty($service->deliverables))

@@ -25,7 +25,7 @@
                            style="transition-delay: {{ $loop->index * 80 }}ms">
                             <div class="relative h-48 overflow-hidden bg-navy-50">
                                 @if ($post->image_path)
-                                    <img src="{{ asset('storage/'.$post->image_path) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                                    <img src="{{ asset('storage/'.$post->image_path) }}" alt="{{ $post->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center">
                                         <x-icon name="document-text" class="h-10 w-10 text-navy-200" />

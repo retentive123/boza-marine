@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class SiteSetting extends Model
 {
@@ -84,9 +85,23 @@ class SiteSetting extends Model
         'whatsapp_agent_3_active' => 'boolean',
     ];
 
+    protected static ?self $currentInstance = null;
+
     public static function current(): self
     {
-        return static::first() ?? static::create([]);
+        return static::$currentInstance ??= Cache::rememberForever('site_settings', fn () => static::first() ?? static::create([]));
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            Cache::forget('site_settings');
+            static::$currentInstance = null;
+        });
+        static::deleted(function () {
+            Cache::forget('site_settings');
+            static::$currentInstance = null;
+        });
     }
 
     public function whatsappAgents(): \Illuminate\Support\Collection

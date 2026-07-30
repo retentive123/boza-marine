@@ -54,7 +54,7 @@
                        style="transition-delay: {{ $loop->index * 80 }}ms">
                         @if ($service->image_path)
                             <div class="relative h-48 overflow-hidden">
-                                <img src="{{ asset('storage/'.$service->image_path) }}" alt="{{ $service->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                                <img src="{{ asset('storage/'.$service->image_path) }}" alt="{{ $service->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                                 <span class="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--color-primary)] backdrop-blur">
                                     {{ $service->category }}

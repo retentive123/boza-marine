@@ -71,7 +71,7 @@
                     'url' => asset('storage/'.$settings->logo_path),
                 ] : null,
             ],
-        ]), JSON_UNESCAPED_SLASHES) !!}
+        ]), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!}
     </script>
 
 </x-layouts.public>

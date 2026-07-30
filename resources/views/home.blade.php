@@ -1,4 +1,4 @@
-<x-layouts.public :settings="$settings" title="Home" metaDescription="Ghanaian-owned maritime crewing, HR outsourcing, consultancy, and logistics for offshore and land-based operations across West Africa.">
+<x-layouts.public :settings="$settings" metaDescription="Boza Marine Solutions and Crewing Services — Ghanaian-owned maritime crewing, HR outsourcing, consultancy, and logistics for offshore and land-based operations across West Africa.">
 
     {{-- Hero --}}
     @php
@@ -239,7 +239,7 @@
             <div class="reveal">
                 @if ($settings->about_image)
                     <div class="mb-8 flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl bg-navy-50 shadow-soft">
-                        <img src="{{ asset('storage/'.$settings->about_image) }}" alt="{{ $settings->company_name }}" class="h-full w-full object-contain">
+                        <img src="{{ asset('storage/'.$settings->about_image) }}" alt="{{ $settings->company_name }}" loading="lazy" class="h-full w-full object-contain">
                     </div>
                 @endif
                 <p class="section-eyebrow">About Boza Marine Solutions</p>
@@ -324,7 +324,7 @@
                         <a href="{{ route('services.show', $service) }}" class="reveal group flex flex-col overflow-hidden rounded-xl border border-navy-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-soft" style="transition-delay: {{ $loop->index * 90 }}ms">
                             @if ($service->image_path)
                                 <div class="relative h-40 overflow-hidden">
-                                    <img src="{{ asset('storage/'.$service->image_path) }}" alt="{{ $service->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <img src="{{ asset('storage/'.$service->image_path) }}" alt="{{ $service->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                                     <span class="absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-primary)] shadow-soft">
                                         <x-icon :name="$service->icon" class="h-5 w-5" />
                                     </span>
@@ -428,7 +428,7 @@
                             <p class="mt-4 text-navy-700">&ldquo;{{ $testimonial->quote }}&rdquo;</p>
                             <div class="mt-5 flex items-center gap-3">
                                 @if ($testimonial->photo_path)
-                                    <img src="{{ asset('storage/'.$testimonial->photo_path) }}" alt="{{ $testimonial->name }}" class="h-10 w-10 rounded-full object-cover">
+                                    <img src="{{ asset('storage/'.$testimonial->photo_path) }}" alt="{{ $testimonial->name }}" loading="lazy" class="h-10 w-10 rounded-full object-cover">
                                 @else
                                     <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary-soft text-sm font-semibold text-[var(--color-primary)]">
                                         {{ strtoupper(substr($testimonial->name, 0, 1)) }}
@@ -494,7 +494,7 @@
                         <a href="{{ route('news.show', $post) }}" class="reveal group flex flex-col overflow-hidden rounded-xl border border-navy-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-soft" style="transition-delay: {{ $loop->index * 90 }}ms">
                             <div class="relative h-40 overflow-hidden bg-navy-100">
                                 @if ($post->image_path)
-                                    <img src="{{ asset('storage/'.$post->image_path) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                                    <img src="{{ asset('storage/'.$post->image_path) }}" alt="{{ $post->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center">
                                         <x-icon name="document-text" class="h-8 w-8 text-navy-300" />
@@ -567,7 +567,7 @@
                         <div class="reveal grid grid-cols-2 gap-3 {{ $showcaseHasCarousel ? 'lg:col-span-2' : 'sm:grid-cols-3 lg:grid-cols-6' }}" style="transition-delay: 120ms">
                             @foreach (($showcaseHasCarousel ? $galleryPreview->take(4) : $galleryPreview) as $image)
                                 <a href="{{ route('gallery') }}" class="group aspect-square overflow-hidden rounded-xl bg-white/5" style="transition-delay: {{ $loop->index * 70 }}ms">
-                                    <img src="{{ asset('storage/'.$image->image_path) }}" alt="{{ $image->caption }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
+                                    <img src="{{ asset('storage/'.$image->image_path) }}" alt="{{ $image->caption }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-110">
                                 </a>
                             @endforeach
                         </div>

@@ -35,7 +35,7 @@
                         <div class="reveal group text-center" style="transition-delay: {{ $loop->index * 90 }}ms">
                             <div class="relative mx-auto h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-soft ring-1 ring-navy-100">
                                 @if ($member->photo_path)
-                                    <img src="{{ asset('storage/'.$member->photo_path) }}" alt="{{ $member->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <img src="{{ asset('storage/'.$member->photo_path) }}" alt="{{ $member->name }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center bg-brand-primary-soft text-3xl font-semibold text-[var(--color-primary)]">
                                         {{ strtoupper(substr($member->name, 0, 1)) }}
@@ -73,7 +73,7 @@
                         <div class="reveal group text-center" style="transition-delay: {{ $loop->index * 90 }}ms">
                             <div class="relative mx-auto h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-soft ring-1 ring-navy-100">
                                 @if ($member->photo_path)
-                                    <img src="{{ asset('storage/'.$member->photo_path) }}" alt="{{ $member->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <img src="{{ asset('storage/'.$member->photo_path) }}" alt="{{ $member->name }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center bg-brand-primary-soft text-2xl font-semibold text-[var(--color-primary)]">
                                         {{ strtoupper(substr($member->name, 0, 1)) }}

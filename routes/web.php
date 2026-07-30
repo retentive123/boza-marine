@@ -35,7 +35,7 @@ Route::get('/careers', [JobController::class, 'index'])->name('careers.index');
 
 Route::middleware('guest:candidate')->group(function () {
     Route::get('/careers/register', [RegisteredCandidateController::class, 'create'])->name('candidate.register');
-    Route::post('/careers/register', [RegisteredCandidateController::class, 'store']);
+    Route::post('/careers/register', [RegisteredCandidateController::class, 'store'])->middleware('throttle:5,1');
     Route::get('/careers/login', [CandidateAuthenticatedSessionController::class, 'create'])->name('candidate.login');
     Route::post('/careers/login', [CandidateAuthenticatedSessionController::class, 'store'])->middleware('throttle:5,1');
 });
@@ -44,13 +44,13 @@ Route::middleware('auth:candidate')->group(function () {
     Route::post('/careers/logout', [CandidateAuthenticatedSessionController::class, 'destroy'])->name('candidate.logout');
     Route::get('/careers/my-applications', [CandidateApplicationController::class, 'index'])->name('candidate.applications.index');
     Route::get('/careers/apply', [JobApplicationController::class, 'create'])->name('careers.apply');
-    Route::post('/careers/apply', [JobApplicationController::class, 'store'])->name('careers.apply.store');
+    Route::post('/careers/apply', [JobApplicationController::class, 'store'])->name('careers.apply.store')->middleware('throttle:10,1');
 });
 
 Route::get('/careers/{jobPosting}', [JobController::class, 'show'])->name('careers.show');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:5,1');
 
 Route::middleware('auth')->group(function () {
     Route::redirect('/dashboard', '/admin', 302)->name('dashboard');
