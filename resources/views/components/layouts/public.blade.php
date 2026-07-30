@@ -37,7 +37,7 @@
 
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => $settings->company_name ?? 'Boza Marine Solutions and Crewing Services',
             'url' => url('/'),
@@ -62,7 +62,7 @@
         ], JSON_UNESCAPED_SLASHES) !!}
     </script>
 </head>
-<body class="flex min-h-screen flex-col bg-white font-sans text-navy-900">
+<body class="flex min-h-screen flex-col bg-white font-sans text-navy-900" x-data="{ open: false, search: false }">
 
     {{-- Top utility bar --}}
     <div class="hidden bg-brand-dark text-white/80 md:block">
@@ -85,7 +85,7 @@
     </div>
 
     {{-- Main navigation --}}
-    <header x-data="{ open: false, search: false }" class="sticky top-0 z-50 border-b border-navy-100 bg-white/95 backdrop-blur">
+    <header class="sticky top-0 z-50 border-b border-navy-100 bg-white/95 backdrop-blur">
         <nav class="container-boza flex items-center justify-between py-4">
             <a href="{{ route('home') }}" class="transition-transform duration-200 hover:scale-[1.03] active:scale-95"><x-logo /></a>
 
@@ -215,57 +215,61 @@
                 <button type="submit" class="btn-primary shrink-0">Search</button>
             </form>
         </div>
-
-        {{-- Mobile menu backdrop --}}
-        <div
-            x-show="open"
-            x-cloak
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            @click="open = false"
-            class="fixed inset-0 z-[60] bg-navy-900/50 lg:hidden"
-        ></div>
-
-        {{-- Mobile menu drawer --}}
-        <div
-            x-show="open"
-            x-cloak
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="-translate-x-full"
-            x-transition:enter-end="translate-x-0"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="translate-x-0"
-            x-transition:leave-end="-translate-x-full"
-            @keydown.escape.window="open = false"
-            class="fixed inset-y-0 left-0 z-[70] flex w-1/2 min-w-[240px] max-w-xs flex-col overflow-y-auto bg-white shadow-2xl lg:hidden"
-        >
-            <div class="flex items-center justify-between border-b border-navy-100 px-4 py-4">
-                <a href="{{ route('home') }}" @click="open = false"><x-logo /></a>
-                <button @click="open = false" aria-label="Close menu" class="text-navy-500 transition active:scale-90">
-                    <x-icon name="x" class="h-6 w-6" />
-                </button>
-            </div>
-
-            <div class="flex flex-1 flex-col gap-1 px-4 py-4">
-                @foreach ($navLinks as $item)
-                    <a href="{{ route($item['route']) }}" class="rounded-md px-3 py-2.5 text-sm font-semibold transition-colors duration-150 active:scale-95 {{ request()->routeIs($item['route'].'*') ? 'bg-brand-primary-soft text-[var(--color-primary)]' : 'text-navy-700 hover:bg-navy-50' }}">
-                        {{ $item['label'] }}
-                    </a>
-                    @foreach ($item['children'] ?? [] as $child)
-                        @continue($child['route'] === $item['route'])
-                        <a href="{{ route($child['route']) }}" class="ml-4 rounded-md border-l border-navy-100 px-3 py-2 text-sm font-medium transition-colors duration-150 active:scale-95 {{ request()->routeIs($child['route'].'*') ? 'text-[var(--color-primary)]' : 'text-navy-500 hover:bg-navy-50' }}">
-                            {{ $child['label'] }}
-                        </a>
-                    @endforeach
-                @endforeach
-                <a href="{{ route('contact') }}" class="btn-primary mt-2 justify-center">Request Crew / Get a Quote</a>
-            </div>
-        </div>
     </header>
+
+    {{-- Mobile menu backdrop --}}
+    {{-- These live outside <header> on purpose: <header> has backdrop-blur, and any
+    ancestor with backdrop-filter/transform/filter/perspective creates a new containing
+    block for position:fixed descendants — that trapped this drawer inside the header's
+    own (short) box instead of the viewport. --}}
+    <div
+        x-show="open"
+        x-cloak
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="open = false"
+        class="fixed inset-0 z-[60] bg-navy-900/50 lg:hidden"
+    ></div>
+
+    {{-- Mobile menu drawer --}}
+    <div
+        x-show="open"
+        x-cloak
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+        @keydown.escape.window="open = false"
+        class="fixed inset-y-0 left-0 z-[70] flex w-1/2 min-w-[240px] max-w-xs flex-col overflow-y-auto bg-white shadow-2xl lg:hidden"
+    >
+        <div class="flex items-center justify-between border-b border-navy-100 px-4 py-4">
+            <a href="{{ route('home') }}" @click="open = false"><x-logo /></a>
+            <button @click="open = false" aria-label="Close menu" class="text-navy-500 transition active:scale-90">
+                <x-icon name="x" class="h-6 w-6" />
+            </button>
+        </div>
+
+        <div class="flex flex-1 flex-col gap-1 px-4 py-4">
+            @foreach ($navLinks as $item)
+                <a href="{{ route($item['route']) }}" class="rounded-md px-3 py-2.5 text-sm font-semibold transition-colors duration-150 active:scale-95 {{ request()->routeIs($item['route'].'*') ? 'bg-brand-primary-soft text-[var(--color-primary)]' : 'text-navy-700 hover:bg-navy-50' }}">
+                    {{ $item['label'] }}
+                </a>
+                @foreach ($item['children'] ?? [] as $child)
+                    @continue($child['route'] === $item['route'])
+                    <a href="{{ route($child['route']) }}" class="ml-4 rounded-md border-l border-navy-100 px-3 py-2 text-sm font-medium transition-colors duration-150 active:scale-95 {{ request()->routeIs($child['route'].'*') ? 'text-[var(--color-primary)]' : 'text-navy-500 hover:bg-navy-50' }}">
+                        {{ $child['label'] }}
+                    </a>
+                @endforeach
+            @endforeach
+            <a href="{{ route('contact') }}" class="btn-primary mt-2 justify-center">Request Crew / Get a Quote</a>
+        </div>
+    </div>
 
     @if (session('success'))
         <div class="bg-brand-primary-soft border-b border-navy-100">

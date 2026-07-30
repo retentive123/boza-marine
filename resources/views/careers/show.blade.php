@@ -64,7 +64,7 @@
 
     <script type="application/ld+json">
         {!! json_encode(array_filter([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'JobPosting',
             'title' => $job->title,
             'description' => $job->description,

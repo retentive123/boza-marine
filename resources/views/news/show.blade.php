@@ -52,7 +52,7 @@
 
     <script type="application/ld+json">
         {!! json_encode(array_filter([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'NewsArticle',
             'headline' => $post->title,
             'description' => $post->excerpt,
